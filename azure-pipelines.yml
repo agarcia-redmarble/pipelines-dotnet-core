@@ -7,7 +7,13 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
+
+variables:
+  version.MajorMinor: '1.0' # Manually adjusted
+  version.Patch: $[counter(variables['version.MajorMinor'],0)]
+  versionNumber: '$(version.MajorMinor).$(version.Patch)'
+  prereleaseVersionNumber: 'Set dynamically below in a task'
 
 steps:
 - script: echo Hello, world!
@@ -17,3 +23,22 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- task: PowerShell@2
+  displayName: Set the name of the build (i.e. the Build.BuildNumber)
+  inputs:
+    targetType: 'inline'
+    script: |
+      [string] $buildName = "$(versionNumber)_$(Build.SourceBranchName)"
+      Write-Host "Setting the name of the build to '$buildName'."
+      Write-Host "##vso[build.updatebuildnumber]$buildName"
+
+- task: PowerShell@2
+  displayName: Set the prereleaseVersionNumber variable value
+  inputs:
+    targetType: 'inline'
+    script: |
+      [string] $dateTime = (Get-Date -Format 'yyyyMMddTHHmmss')
+      [string] $prereleaseVersionNumber = "$(versionNumber)-ci$dateTime+$(Build.SourceVersion)"
+      Write-Host "Setting the prerelease version number variable to '$prereleaseVersionNumber'."
+      Write-Host "##vso[task.setvariable variable=prereleaseVersionNumber]$prereleaseVersionNumber"
