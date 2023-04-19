@@ -16,20 +16,20 @@ variables:
   prereleaseVersionNumber: 'Set dynamically below in a task'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+#- script: echo Hello, world!
+#  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+#- script: |
+#    echo Add other tasks to build, test, and deploy your project.
+#    echo See https://aka.ms/yaml
+#  displayName: 'Run a multi-line script'
 
 - task: PowerShell@2
   displayName: Set the name of the build (i.e. the Build.BuildNumber)
   inputs:
     targetType: 'inline'
     script: |
-      [string] $buildName = "$(versionNumber)_$(Build.SourceBranchName)"
+      [string] $buildName = "$(versionNumber).$(Build.SourceVersion)"
       Write-Host "Setting the name of the build to '$buildName'."
       Write-Host "##vso[build.updatebuildnumber]$buildName"
 
