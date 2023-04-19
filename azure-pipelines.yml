@@ -29,7 +29,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      [string] $dateTime = (Get-Date -Format 'yyyyMMddTHHmmss')
+      [string] $dateTime = (Get-Date -Format 'yyyyMMddHHmmss')
       [string] $buildName = "$(versionNumber).$dateTime"
       Write-Host "Setting the name of the build to '$buildName'."
       Write-Host "##vso[build.updatebuildnumber]$buildName"
