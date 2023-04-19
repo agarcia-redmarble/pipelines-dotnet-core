@@ -29,16 +29,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      [string] $buildName = "$(versionNumber).$(Build.SourceVersion)"
+      [string] $dateTime = (Get-Date -Format 'yyyyMMddTHHmmss')
+      [string] $buildName = "$(versionNumber).$dateTime"
       Write-Host "Setting the name of the build to '$buildName'."
       Write-Host "##vso[build.updatebuildnumber]$buildName"
-
-- task: PowerShell@2
-  displayName: Set the prereleaseVersionNumber variable value
-  inputs:
-    targetType: 'inline'
-    script: |
-      [string] $dateTime = (Get-Date -Format 'yyyyMMddTHHmmss')
-      [string] $prereleaseVersionNumber = "$(versionNumber)-ci$dateTime+$(Build.SourceVersion)"
-      Write-Host "Setting the prerelease version number variable to '$prereleaseVersionNumber'."
-      Write-Host "##vso[task.setvariable variable=prereleaseVersionNumber]$prereleaseVersionNumber"
