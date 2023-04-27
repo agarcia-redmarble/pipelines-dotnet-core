@@ -36,5 +36,4 @@ steps:
               $buildId = $(Build.BuildId)
               $versionNumber = "$majorVersion.$minorVersion.$buildId.$dateTime"
               echo "##vso[task.setvariable variable=Version_Number]$versionNumber"
-              displayName: 'Set Version Number'
 
